@@ -348,10 +348,11 @@ open class SocketManager : NSObject, SocketManagerSpec, SocketParsable, SocketDa
         DefaultSocketLogger.Logger.log("Engine opened \(reason)", type: SocketManager.logType)
 
         status = .connected
-        nsps["/"]?.didConnect(toNamespace: "/")
+        nsps["/"]?.handleClientEvent(.engineOpen, data: [])
 
         for (nsp, socket) in nsps where nsp != "/" && socket.status == .connecting {
             connectSocket(socket)
+            socket.handleClientEvent(.engineOpen, data: [])
         }
     }
 
